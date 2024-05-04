@@ -51,5 +51,16 @@ export class OrdersController {
     }
   }
 
+  @Patch(':id')
+  changeStatus(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() statusOrderDto: StatusOrderDto
+  ) {
+    try {
+      return this.ordersClient.send('changeOrderStatus', { id, status: statusOrderDto.status })
+    } catch (error) {
+      throw new RpcException(error)
+    };
+  }
 
 }
