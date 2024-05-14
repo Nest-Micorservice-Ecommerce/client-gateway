@@ -4,7 +4,6 @@ import { NATS_SERVICE, envs } from 'src/config';
 
 @Module({
   imports: [
-    //* configuracion con protocolo NATS
     ClientsModule.register([
       //* configuracion con protocolo NATS
       {
