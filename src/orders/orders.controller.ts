@@ -3,6 +3,7 @@ import { NATS_SERVICE, ORDER_SERVICE } from 'src/config';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { CreateOrderDto, OrderPaginationDto, StatusOrderDto } from './dto';
 import { PaginationDto } from 'src/common';
+import { firstValueFrom } from 'rxjs';
 
 
 
@@ -19,8 +20,15 @@ export class OrdersController {
   }
 
   @Get()
-  findAll(@Query() orderPaginationDto: OrderPaginationDto) {
-    return this.client.send('findAllOrders', orderPaginationDto);
+  async findAll(@Query() orderPaginationDto: OrderPaginationDto) {
+    try {
+      const orders = await firstValueFrom(
+        this.client.send('findAllOrders', orderPaginationDto)
+      )
+      return orders;
+    } catch (error) {
+      throw new RpcException(error)
+    }
   }
 
   @Get('id/:id')
